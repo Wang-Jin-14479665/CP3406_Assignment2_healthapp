@@ -21,7 +21,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.11" // ✅ 关键：建议与 Compose 版本匹配
+        kotlinCompilerExtensionVersion = "1.5.11" // It is recommended to match the Compose version
     }
 
     kotlinOptions {
@@ -34,7 +34,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.activity:activity-compose:1.8.2")
 
-    // ✅ Compose 核心
+    // ✅ Compose core
     implementation("androidx.compose.ui:ui:1.6.5")
     implementation("androidx.compose.material3:material3:1.2.0")
     implementation("androidx.compose.foundation:foundation:1.6.5")
@@ -56,11 +56,11 @@ dependencies {
     // Material Design
     implementation("com.google.android.material:material:1.12.0")
 
-    // 单元测试库
+    // Unit test library
     testImplementation("org.mockito:mockito-core:4.0.0")
     testImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
 
-    // 底部导航栏
+    // Bottom navigation bar
     implementation("androidx.navigation:navigation-compose:2.7.1")
 
 }
