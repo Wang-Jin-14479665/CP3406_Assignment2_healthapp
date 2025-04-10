@@ -25,12 +25,13 @@ class HealthViewModel(private val repository: HealthRepository) : ViewModel() {
 
     fun initializeDB() {
         viewModelScope.launch {
-            val mealsList = repository.getAllMeals()
-            val result = mealsList.map { meal ->
-                val foods = repository.getFoodsByMealId(meal.mealId).map { it.toModel() }
-                MealWithFoods(meal, foods)
+            repository.getAllMeals().collect { mealsList ->
+                val result = mealsList.map { meal ->
+                    val foods = repository.getFoodsByMealId(meal.mealId).map { it.toModel() }
+                    MealWithFoods(meal, foods)
+                }
+                _meals.value = result
             }
-            _meals.value = result
         }
     }
 

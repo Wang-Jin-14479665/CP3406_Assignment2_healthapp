@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.room.Room
 import com.example.healthapp.data.AppDatabase
 import com.example.healthapp.data.HealthRepository
+import com.example.healthapp.data.RoomHealthRepository
 
 class HealthApplication : Application() {
 
@@ -18,6 +19,6 @@ class HealthApplication : Application() {
             "health-db"
         ).build()
 
-        repository = HealthRepository(db.healthDao())
+        repository = RoomHealthRepository(db.healthDao())
     }
 }
