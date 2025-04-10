@@ -40,6 +40,11 @@ dependencies {
     implementation("androidx.compose.foundation:foundation:1.6.5")
     implementation("androidx.compose.foundation:foundation-layout:1.6.5")
     implementation("androidx.compose.ui:ui-tooling-preview:1.6.5")
+    implementation(libs.androidx.monitor)
+    implementation(libs.androidx.junit.ktx)
+    implementation(libs.androidx.ui.test.junit4.android)
+    testImplementation(libs.junit.junit)
+    androidTestImplementation(libs.junit.junit)
     debugImplementation("androidx.compose.ui:ui-tooling:1.6.5")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
 
@@ -50,4 +55,9 @@ dependencies {
 
     // Material Design
     implementation("com.google.android.material:material:1.12.0")
+
+    // 单元测试库
+    testImplementation("org.mockito:mockito-core:4.0.0")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
+
 }
