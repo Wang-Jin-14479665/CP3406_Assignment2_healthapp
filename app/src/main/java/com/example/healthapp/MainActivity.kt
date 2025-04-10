@@ -58,13 +58,13 @@ fun BottomNavigationBar(navController: NavHostController) {
         NavigationBarItem(
             selected = navController.currentDestination?.route == "meal",
             onClick = { navController.navigate("meal") },
-            label = { Text("饮食") },
+            label = { Text("Meal") },
             icon = {}
         )
         NavigationBarItem(
             selected = navController.currentDestination?.route == "sport",
             onClick = { navController.navigate("sport") },
-            label = { Text("运动") },
+            label = { Text("Sport") },
             icon = {}
         )
     }

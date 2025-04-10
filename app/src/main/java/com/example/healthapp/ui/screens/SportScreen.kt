@@ -25,7 +25,7 @@ fun SportScreen(viewModel: HealthViewModel) {
 
     Column(modifier = Modifier.padding(16.dp)) {
         Button(onClick = { showDialog = true }, modifier = Modifier.align(Alignment.CenterHorizontally)) {
-            Text("添加 Sport")
+            Text("Add an exercise")
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -38,16 +38,16 @@ fun SportScreen(viewModel: HealthViewModel) {
                     elevation = CardDefaults.cardElevation(4.dp)
                 ) {
                     Column(modifier = Modifier.padding(12.dp)) {
-                        Text("运动项目：${sport.sportName}", style = MaterialTheme.typography.titleMedium)
-                        Text("平均心率：${sport.avgHeartRate} 次/分钟")
-                        Text("热量消耗：${sport.caloriesBurned} 千卡")
+                        Text("sport event：${sport.sportName}", style = MaterialTheme.typography.titleMedium)
+                        Text("average heart rate\n：${sport.avgHeartRate} beats/minute")
+                        Text("heat consumption\n：${sport.caloriesBurned} kilocalorie")
 
                         Spacer(modifier = Modifier.height(4.dp))
 
                         Button(onClick = {
                             viewModel.deleteSport(sport)
                         }, modifier = Modifier.align(Alignment.End)) {
-                            Text("删除 Sport")
+                            Text("Delete Sport")
                         }
                     }
                 }
@@ -58,25 +58,25 @@ fun SportScreen(viewModel: HealthViewModel) {
     if (showDialog) {
         AlertDialog(
             onDismissRequest = { showDialog = false },
-            title = { Text("添加 Sport") },
+            title = { Text("Add an exercise") },
             text = {
                 Column {
                     OutlinedTextField(
                         value = inputSportName,
                         onValueChange = { inputSportName = it },
-                        label = { Text("运动项目") }
+                        label = { Text("sport event") }
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     OutlinedTextField(
                         value = inputHeartRate,
                         onValueChange = { inputHeartRate = it },
-                        label = { Text("平均心率") }
+                        label = { Text("average heart rate\n") }
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     OutlinedTextField(
                         value = inputCalories,
                         onValueChange = { inputCalories = it },
-                        label = { Text("热量消耗") }
+                        label = { Text("heat consumption") }
                     )
                 }
             },
@@ -90,12 +90,12 @@ fun SportScreen(viewModel: HealthViewModel) {
                         inputCalories = ""
                     }
                 }) {
-                    Text("确认")
+                    Text("Confirm")
                 }
             },
             dismissButton = {
                 Button(onClick = { showDialog = false }) {
-                    Text("取消")
+                    Text("Cancel")
                 }
             }
         )

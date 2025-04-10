@@ -142,12 +142,12 @@ fun MealScreen(viewModel: HealthViewModel) {
                         inputCalories = ""
                     }
                 }) {
-                    Text("确认")
+                    Text("Confirm")
                 }
             },
             dismissButton = {
                 Button(onClick = { showFoodDialog = false }) {
-                    Text("取消")
+                    Text("Cancel")
                 }
             }
         )

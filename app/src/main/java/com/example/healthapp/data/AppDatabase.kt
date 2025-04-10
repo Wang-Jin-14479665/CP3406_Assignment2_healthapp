@@ -27,7 +27,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "health_database"
                 )
-                    .fallbackToDestructiveMigration()  // 升级时自动清空数据库（测试时常用）
+                    .fallbackToDestructiveMigration()  // 升级时自动清空数据库（测试时常用） Automatically empty database during upgrade (often used in testing)
                     .build()
                 INSTANCE = instance
                 instance

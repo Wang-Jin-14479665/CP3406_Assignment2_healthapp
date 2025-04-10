@@ -5,8 +5,8 @@ import com.example.healthapp.data.FoodEntity
 
 data class Food(
     val id: Int = 0,           // food 的 id
-    val foodName: String,      // 食物名称
-    val calories: Int          // 热量
+    val foodName: String,
+    val calories: Int
 )
 
 fun Food.toEntity(mealId: Int): FoodEntity {
@@ -14,7 +14,7 @@ fun Food.toEntity(mealId: Int): FoodEntity {
         foodId = this.id,
         foodName = this.foodName,
         calories = this.calories,
-        mealId = mealId // 传入 mealId 外键
+        mealId = mealId // 传入 mealId 外键 Pass in the mealId foreign key
     )
 }
 

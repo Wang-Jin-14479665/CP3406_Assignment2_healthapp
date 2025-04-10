@@ -22,7 +22,7 @@ import androidx.lifecycle.viewModelScope
 
 class HealthViewModel(private val repository: HealthRepository) : ViewModel() {
 
-    // =================== Sport 相关 ======================
+    // =================== be related to Sport 相关 ======================
 
     // 存储所有 Sport 数据（UI 用 collectAsState 监听）
     private val _sports = MutableStateFlow<List<SportEntity>>(emptyList())
@@ -37,7 +37,7 @@ class HealthViewModel(private val repository: HealthRepository) : ViewModel() {
         }
     }
 
-    // 添加 Sport
+    // Add Sport
     fun addSport(sportName: String, avgHeartRate: Int, caloriesBurned: Int) {
         viewModelScope.launch {
             val newSport = SportEntity(
@@ -49,14 +49,14 @@ class HealthViewModel(private val repository: HealthRepository) : ViewModel() {
         }
     }
 
-    // 删除 Sport
+    // Delete Sport
     fun deleteSport(sport: SportEntity) {
         viewModelScope.launch {
             repository.deleteSport(sport)
         }
     }
 
-    // =================== 其他 Meal 和 Food 保持不变 ======================
+    // =================== 其他 Meal 和 Food 保持不变 Other meals and Food remain the same ======================
 
     private val _meals = MutableStateFlow<List<MealWithFoods>>(emptyList())
     val meals: StateFlow<List<MealWithFoods>> = _meals
