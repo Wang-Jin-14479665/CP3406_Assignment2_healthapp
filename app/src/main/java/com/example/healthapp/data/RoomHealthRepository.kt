@@ -6,8 +6,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class RoomHealthRepository(
-    private val dao: HealthDao
+    private val dao: HealthDao,
+    private val sportDao: SportDao  // 新增 SportDao
 ) : HealthRepository {
+
+    // ================= Meal 相关 ==================
 
     // 查询所有 Meal（返回 Flow）
     override fun getAllMeals(): Flow<List<MealEntity>> = flow {
@@ -39,4 +42,17 @@ class RoomHealthRepository(
     override suspend fun deleteFood(food: FoodEntity) {
         dao.deleteFood(food)
     }
+
+    // ================= Sport 相关 ==================
+
+    override fun getAllSports(): Flow<List<SportEntity>> = sportDao.getAllSports()
+
+    override suspend fun insertSport(sport: SportEntity) {
+        sportDao.insertSport(sport)
+    }
+
+    override suspend fun deleteSport(sport: SportEntity) {
+        sportDao.deleteSport(sport)
+    }
+
 }
