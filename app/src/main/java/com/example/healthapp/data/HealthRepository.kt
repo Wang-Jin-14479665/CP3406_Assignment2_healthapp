@@ -1,29 +1,15 @@
+// HealthRepository.kt
 package com.example.healthapp.data
 
 import com.example.healthapp.model.Food
-import com.example.healthapp.data.FoodEntity
-import com.example.healthapp.data.HealthDao
+import com.example.healthapp.data.MealEntity
 import kotlinx.coroutines.flow.Flow
 
-
-
-class HealthRepository(private val dao: HealthDao) {
-
-    suspend fun getAllMeals(): List<MealEntity> = dao.getAllMeals()
-
-    suspend fun getFoodsByMealId(mealId: Int): List<FoodEntity> = dao.getFoodsByMealId(mealId)
-
-    suspend fun insertMeal(meal: MealEntity): Long = dao.insertMeal(meal)
-
-    suspend fun insertFood(food: FoodEntity) = dao.insertFood(food)
-
-    suspend fun deleteMeal(meal: MealEntity) {
-        dao.deleteFoodsByMealId(meal.mealId)  // 先删 foods
-        dao.deleteMeal(meal)                  // 再删 meal
-    }
-
-    suspend fun deleteFood(food: FoodEntity) {
-        dao.deleteFood(food)
-    }
-
+interface HealthRepository {
+    fun getAllMeals(): Flow<List<MealEntity>>
+    suspend fun getFoodsByMealId(mealId: Int): List<FoodEntity>
+    suspend fun insertMeal(meal: MealEntity): Long
+    suspend fun insertFood(food: FoodEntity)
+    suspend fun deleteMeal(meal: MealEntity)
+    suspend fun deleteFood(food: FoodEntity)
 }
