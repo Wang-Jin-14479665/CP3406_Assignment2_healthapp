@@ -28,7 +28,7 @@ fun MealScreen(viewModel: HealthViewModel) {
 
     Column(modifier = Modifier.padding(16.dp)) {
         Button(onClick = { showMealDialog = true }, modifier = Modifier.align(Alignment.CenterHorizontally)) {
-            Text("添加 Meal")
+            Text("Add a Meal")
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -50,7 +50,7 @@ fun MealScreen(viewModel: HealthViewModel) {
                             Text("${mealWithFoods.meal.mealName}：", style = MaterialTheme.typography.titleMedium)
 
                             Button(onClick = { viewModel.deleteMeal(mealWithFoods.meal) }) {
-                                Text("删除 Meal")
+                                Text("Delete Meal")
                             }
                         }
 
@@ -59,21 +59,21 @@ fun MealScreen(viewModel: HealthViewModel) {
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
-                                Text("- ${it.foodName}: ${it.calories} 千卡")
+                                Text("- ${it.foodName}: ${it.calories} kilocalorie")
                                 Button(onClick = { viewModel.deleteFood(it) }) {
-                                    Text("删除")
+                                    Text("delete")
                                 }
                             }
                         }
 
-                        Text("总热量：${mealWithFoods.foods.sumOf { it.calories }} 千卡", fontWeight = FontWeight.Bold)
+                        Text("Total Heat：${mealWithFoods.foods.sumOf { it.calories }} kilocalorie", fontWeight = FontWeight.Bold)
                         Spacer(modifier = Modifier.height(4.dp))
 
                         Button(onClick = {
                             selectedMealId = mealWithFoods.meal.mealId
                             showFoodDialog = true
                         }, modifier = Modifier.align(Alignment.End)) {
-                            Text("添加食物")
+                            Text("Add a Food")
                         }
                     }
                 }
@@ -85,12 +85,12 @@ fun MealScreen(viewModel: HealthViewModel) {
     if (showMealDialog) {
         AlertDialog(
             onDismissRequest = { showMealDialog = false },
-            title = { Text("添加 Meal") },
+            title = { Text("Adding a Meal") },
             text = {
                 OutlinedTextField(
                     value = inputMealName,
                     onValueChange = { inputMealName = it },
-                    label = { Text("Meal 名称") }
+                    label = { Text("Meal name") }
                 )
             },
             confirmButton = {
@@ -101,12 +101,12 @@ fun MealScreen(viewModel: HealthViewModel) {
                         inputMealName = ""
                     }
                 }) {
-                    Text("确认")
+                    Text("Confirm")
                 }
             },
             dismissButton = {
                 Button(onClick = { showMealDialog = false }) {
-                    Text("取消")
+                    Text("Cancel")
                 }
             }
         )
@@ -116,19 +116,19 @@ fun MealScreen(viewModel: HealthViewModel) {
     if (showFoodDialog) {
         AlertDialog(
             onDismissRequest = { showFoodDialog = false },
-            title = { Text("添加食物") },
+            title = { Text("Add a Food") },
             text = {
                 Column {
                     OutlinedTextField(
                         value = inputFoodName,
                         onValueChange = { inputFoodName = it },
-                        label = { Text("食物名称") }
+                        label = { Text("Item") }
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     OutlinedTextField(
                         value = inputCalories,
                         onValueChange = { inputCalories = it },
-                        label = { Text("热量（千卡）") }
+                        label = { Text("Heat (kcal)") }
                     )
                 }
             },
