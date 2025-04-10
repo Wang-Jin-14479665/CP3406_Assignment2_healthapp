@@ -1,4 +1,3 @@
-// MealScreen.kt
 package com.example.healthapp.ui.screens.meal
 
 import androidx.compose.foundation.layout.*
@@ -37,26 +36,39 @@ fun MealScreen(viewModel: HealthViewModel) {
         LazyColumn {
             items(meals) { mealWithFoods ->
                 Card(
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
                     shape = RoundedCornerShape(12.dp),
                     elevation = CardDefaults.cardElevation(4.dp)
                 ) {
                     Column(modifier = Modifier.padding(12.dp)) {
-                        Text("${mealWithFoods.meal.mealName}：", style = MaterialTheme.typography.titleMedium)
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text("${mealWithFoods.meal.mealName}：", style = MaterialTheme.typography.titleMedium)
 
-                        Button(onClick = { viewModel.deleteMeal(mealWithFoods.meal) }) {
-                            Text("删除 Meal")
+                            Button(onClick = { viewModel.deleteMeal(mealWithFoods.meal) }) {
+                                Text("删除 Meal")
+                            }
                         }
 
                         mealWithFoods.foods.forEach {
-                            Text("- ${it.foodName}: ${it.calories} 千卡")
-                            Button(onClick = { viewModel.deleteFood(it) }) {
-                                Text("删除")
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text("- ${it.foodName}: ${it.calories} 千卡")
+                                Button(onClick = { viewModel.deleteFood(it) }) {
+                                    Text("删除")
+                                }
                             }
                         }
 
                         Text("总热量：${mealWithFoods.foods.sumOf { it.calories }} 千卡", fontWeight = FontWeight.Bold)
                         Spacer(modifier = Modifier.height(4.dp))
+
                         Button(onClick = {
                             selectedMealId = mealWithFoods.meal.mealId
                             showFoodDialog = true
@@ -69,6 +81,75 @@ fun MealScreen(viewModel: HealthViewModel) {
         }
     }
 
-    // Dialog 保留不变（复制你之前的逻辑）
-    // showMealDialog 和 showFoodDialog
+    // Meal 添加弹窗
+    if (showMealDialog) {
+        AlertDialog(
+            onDismissRequest = { showMealDialog = false },
+            title = { Text("添加 Meal") },
+            text = {
+                OutlinedTextField(
+                    value = inputMealName,
+                    onValueChange = { inputMealName = it },
+                    label = { Text("Meal 名称") }
+                )
+            },
+            confirmButton = {
+                Button(onClick = {
+                    if (inputMealName.isNotBlank()) {
+                        viewModel.addMeal(inputMealName)
+                        showMealDialog = false
+                        inputMealName = ""
+                    }
+                }) {
+                    Text("确认")
+                }
+            },
+            dismissButton = {
+                Button(onClick = { showMealDialog = false }) {
+                    Text("取消")
+                }
+            }
+        )
+    }
+
+    // Food 添加弹窗
+    if (showFoodDialog) {
+        AlertDialog(
+            onDismissRequest = { showFoodDialog = false },
+            title = { Text("添加食物") },
+            text = {
+                Column {
+                    OutlinedTextField(
+                        value = inputFoodName,
+                        onValueChange = { inputFoodName = it },
+                        label = { Text("食物名称") }
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    OutlinedTextField(
+                        value = inputCalories,
+                        onValueChange = { inputCalories = it },
+                        label = { Text("热量（千卡）") }
+                    )
+                }
+            },
+            confirmButton = {
+                Button(onClick = {
+                    if (inputFoodName.isNotBlank() && inputCalories.isNotBlank()) {
+                        val calories = inputCalories.toIntOrNull() ?: 0
+                        viewModel.addFood(selectedMealId, Food(0, inputFoodName, calories))
+                        showFoodDialog = false
+                        inputFoodName = ""
+                        inputCalories = ""
+                    }
+                }) {
+                    Text("确认")
+                }
+            },
+            dismissButton = {
+                Button(onClick = { showFoodDialog = false }) {
+                    Text("取消")
+                }
+            }
+        )
+    }
 }
