@@ -12,13 +12,51 @@ import com.example.healthapp.model.MealWithFoods
 import com.example.healthapp.model.toEntity
 import com.example.healthapp.model.toModel
 import com.example.healthapp.data.HealthRepository
+import com.example.healthapp.data.SportEntity
 import com.example.healthapp.data.MealEntity
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import androidx.lifecycle.viewModelScope
 
 class HealthViewModel(private val repository: HealthRepository) : ViewModel() {
+
+    // =================== Sport 相关 ======================
+
+    // 存储所有 Sport 数据（UI 用 collectAsState 监听）
+    private val _sports = MutableStateFlow<List<SportEntity>>(emptyList())
+    val sports: StateFlow<List<SportEntity>> = _sports.asStateFlow()
+
+    // 初始化 Sport 数据（启动后调用）
+    fun initializeSport() {
+        viewModelScope.launch {
+            repository.getAllSports().collect { sportList ->
+                _sports.value = sportList
+            }
+        }
+    }
+
+    // 添加 Sport
+    fun addSport(sportName: String, avgHeartRate: Int, caloriesBurned: Int) {
+        viewModelScope.launch {
+            val newSport = SportEntity(
+                sportName = sportName,
+                avgHeartRate = avgHeartRate,
+                caloriesBurned = caloriesBurned
+            )
+            repository.insertSport(newSport)
+        }
+    }
+
+    // 删除 Sport
+    fun deleteSport(sport: SportEntity) {
+        viewModelScope.launch {
+            repository.deleteSport(sport)
+        }
+    }
+
+    // =================== 其他 Meal 和 Food 保持不变 ======================
 
     private val _meals = MutableStateFlow<List<MealWithFoods>>(emptyList())
     val meals: StateFlow<List<MealWithFoods>> = _meals

@@ -7,18 +7,16 @@ import com.example.healthapp.data.HealthRepository
 import com.example.healthapp.data.RoomHealthRepository
 
 class HealthApplication : Application() {
-
-    lateinit var db: AppDatabase
-    lateinit var repository: HealthRepository
+    lateinit var repository: RoomHealthRepository
 
     override fun onCreate() {
         super.onCreate()
-        db = Room.databaseBuilder(
-            applicationContext,
-            AppDatabase::class.java,
-            "health-db"
-        ).build()
 
-        repository = RoomHealthRepository(db.healthDao())
+        val database = AppDatabase.getDatabase(this)
+
+        repository = RoomHealthRepository(
+            database.healthDao(),
+            database.sportDao()  // 必须传入 sportDao
+        )
     }
 }
