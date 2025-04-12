@@ -1,5 +1,6 @@
 package com.example.healthapp.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -18,7 +19,36 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 
+
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
+import com.example.healthapp.data.HealthTipEntity
+
+
+
 class HealthViewModel(private val repository: HealthRepository) : ViewModel() {
+
+    // HealthTip 数据流
+    val healthTips: StateFlow<List<HealthTipEntity>> =
+        repository.getAllHealthTips()
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5000),
+                emptyList()
+            )
+
+    // 健康小提示 刷新函数
+    fun refreshHealthTips() = viewModelScope.launch {
+        val tips = repository.fetchHealthTips()  // 返回 List<HealthTipEntity>
+        repository.insertHealthTips(tips)  // 插入数据库
+    }
+
+    // 初始化的时候调用刷新
+    init {
+        Log.d("HealthViewModel", "Init ViewModel 执行了")
+        refreshHealthTips()
+    }
 
     // Meal 数据
     private val _meals = MutableStateFlow<List<MealWithFoods>>(emptyList())

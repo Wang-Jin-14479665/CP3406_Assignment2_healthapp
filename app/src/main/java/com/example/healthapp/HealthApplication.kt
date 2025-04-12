@@ -5,18 +5,26 @@ import androidx.room.Room
 import com.example.healthapp.data.AppDatabase
 import com.example.healthapp.data.HealthRepository
 import com.example.healthapp.data.RoomHealthRepository
+import com.example.healthapp.remote.HealthTipApiModule
+import com.example.healthapp.remote.HealthTipRemoteDataSource
+import dagger.hilt.android.HiltAndroidApp
 
 class HealthApplication : Application() {
-    lateinit var repository: RoomHealthRepository
+    lateinit var roomHealthRepository: HealthRepository
+        private set
+
+    val repository: HealthRepository
+        get() = roomHealthRepository
 
     override fun onCreate() {
         super.onCreate()
-
         val database = AppDatabase.getDatabase(this)
 
-        repository = RoomHealthRepository(
+        roomHealthRepository = RoomHealthRepository(
             database.healthDao(),
-            database.sportDao()  // 必须传入 sportDao
+            database.sportDao(),
+            database.healthTipDao(),
+            HealthTipRemoteDataSource(HealthTipApiModule.provideApiService())
         )
     }
 }

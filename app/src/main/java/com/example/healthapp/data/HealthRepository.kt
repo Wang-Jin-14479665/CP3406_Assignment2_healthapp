@@ -19,4 +19,10 @@ interface HealthRepository {
     suspend fun insertSport(sport: SportEntity)
     suspend fun deleteSport(sport: SportEntity)
 
+    // HealthTip 相关
+    fun getAllHealthTips(): Flow<List<HealthTipEntity>>
+    suspend fun insertHealthTips(tips: List<HealthTipEntity>)
+    suspend fun refreshHealthTips()
+    suspend fun fetchHealthTips(): List<HealthTipEntity>
+
 }

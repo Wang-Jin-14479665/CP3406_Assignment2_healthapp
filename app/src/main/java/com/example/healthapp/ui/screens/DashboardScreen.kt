@@ -14,6 +14,7 @@ fun DashboardScreen(viewModel: HealthViewModel) {
     // 获取最新Meal和Sport数据
     val latestMeal by viewModel.latestMeal.collectAsState()
     val latestSport by viewModel.latestSport.collectAsState()
+    val healthTips by viewModel.healthTips.collectAsState()
 
     // 生成随机步数和心率（假数据）
     val step = remember { viewModel.generateRandomStep() }
@@ -25,18 +26,32 @@ fun DashboardScreen(viewModel: HealthViewModel) {
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        // 步数
         DashboardCard(title = "Step Count", content = "$step steps")
+        // 心率
         DashboardCard(title = "Hart Rate", content = "$heartRate beats/m")
 
+        // 最近饮食
         DashboardCard(
             title = "Latest diet record",
             content = latestMeal?.meal?.mealName ?: "no record found"
         )
 
+        // 最近运动
         DashboardCard(
             title = "Latest Exercise record",
             content = latestSport?.sportName ?: "no record found"
         )
+
+        // 健康小提示（随机）
+        Card(modifier = Modifier.fillMaxWidth()) {
+            Text(
+                text = healthTips.randomOrNull()?.title ?: "暂无健康小提示",
+                style = MaterialTheme.typography.headlineSmall,
+                modifier = Modifier.padding(16.dp)
+            )
+        }
+
     }
 }
 

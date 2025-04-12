@@ -8,13 +8,18 @@ import com.example.healthapp.data.SportEntity
 
 
 
-@Database(entities = [MealEntity::class, FoodEntity::class, SportEntity::class],
-    version = 3,
+@Database(entities = [
+    MealEntity::class,
+    FoodEntity::class,
+    SportEntity::class,
+    HealthTipEntity::class],
+    version = 5,
     exportSchema = false)
 
 abstract class AppDatabase : RoomDatabase() {
     abstract fun healthDao(): HealthDao
     abstract fun sportDao(): SportDao
+    abstract fun healthTipDao(): HealthTipDao
 
     companion object {
         @Volatile
