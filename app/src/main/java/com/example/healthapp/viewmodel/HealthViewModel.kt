@@ -2,65 +2,41 @@ package com.example.healthapp.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.viewModelScope
 import com.example.healthapp.HealthApplication
+import com.example.healthapp.data.HealthRepository
+import com.example.healthapp.data.MealEntity
+import com.example.healthapp.data.SportEntity
 import com.example.healthapp.model.Food
 import com.example.healthapp.model.MealWithFoods
 import com.example.healthapp.model.toEntity
 import com.example.healthapp.model.toModel
-import com.example.healthapp.data.HealthRepository
-import com.example.healthapp.data.SportEntity
-import com.example.healthapp.data.MealEntity
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 
 class HealthViewModel(private val repository: HealthRepository) : ViewModel() {
 
-    // =================== be related to Sport 相关 ======================
+    // Meal 数据
+    private val _meals = MutableStateFlow<List<MealWithFoods>>(emptyList())
+    val meals: StateFlow<List<MealWithFoods>> = _meals.asStateFlow()
 
-    // 存储所有 Sport 数据（UI 用 collectAsState 监听）
+    // Sport 数据
     private val _sports = MutableStateFlow<List<SportEntity>>(emptyList())
     val sports: StateFlow<List<SportEntity>> = _sports.asStateFlow()
 
-    // 初始化 Sport 数据（启动后调用）
-    fun initializeSport() {
-        viewModelScope.launch {
-            repository.getAllSports().collect { sportList ->
-                _sports.value = sportList
-            }
-        }
-    }
+    // Dashboard 专用 - 获取最新 Meal 和 Sport 数据
+    val latestMeal: StateFlow<MealWithFoods?> = meals.map { it.lastOrNull() }.stateIn(
+        viewModelScope, SharingStarted.WhileSubscribed(5000), null
+    )
+    val latestSport: StateFlow<SportEntity?> = sports.map { it.lastOrNull() }.stateIn(
+        viewModelScope, SharingStarted.WhileSubscribed(5000), null
+    )
 
-    // Add Sport
-    fun addSport(sportName: String, avgHeartRate: Int, caloriesBurned: Int) {
-        viewModelScope.launch {
-            val newSport = SportEntity(
-                sportName = sportName,
-                avgHeartRate = avgHeartRate,
-                caloriesBurned = caloriesBurned
-            )
-            repository.insertSport(newSport)
-        }
-    }
-
-    // Delete Sport
-    fun deleteSport(sport: SportEntity) {
-        viewModelScope.launch {
-            repository.deleteSport(sport)
-        }
-    }
-
-    // =================== 其他 Meal 和 Food 保持不变 Other meals and Food remain the same ======================
-
-    private val _meals = MutableStateFlow<List<MealWithFoods>>(emptyList())
-    val meals: StateFlow<List<MealWithFoods>> = _meals
-
+    // 初始化 Meal 和 Sport 数据
     fun initializeDB() {
         viewModelScope.launch {
             repository.getAllMeals().collect { mealsList ->
@@ -71,8 +47,19 @@ class HealthViewModel(private val repository: HealthRepository) : ViewModel() {
                 _meals.value = result
             }
         }
+        initializeSport() // 启动时同步初始化 Sport
     }
 
+    // Sport 初始化
+    fun initializeSport() {
+        viewModelScope.launch {
+            repository.getAllSports().collect { sportList ->
+                _sports.value = sportList
+            }
+        }
+    }
+
+    // Meal 相关操作
     fun addMeal(mealName: String) {
         viewModelScope.launch {
             repository.insertMeal(MealEntity(mealName = mealName))
@@ -90,17 +77,38 @@ class HealthViewModel(private val repository: HealthRepository) : ViewModel() {
     fun deleteMeal(meal: MealEntity) {
         viewModelScope.launch {
             repository.deleteMeal(meal)
-            initializeDB() // 刷新数据
+            initializeDB()
         }
     }
 
     fun deleteFood(food: Food) {
         viewModelScope.launch {
-            repository.deleteFood(food.toEntity(mealId = 0)) // mealId 不影响 delete
+            repository.deleteFood(food.toEntity(mealId = 0))
             initializeDB()
         }
     }
 
+    // Sport 相关操作
+    fun addSport(sportName: String, avgHeartRate: Int, caloriesBurned: Int) {
+        viewModelScope.launch {
+            val newSport = SportEntity(
+                sportName = sportName,
+                avgHeartRate = avgHeartRate,
+                caloriesBurned = caloriesBurned
+            )
+            repository.insertSport(newSport)
+        }
+    }
+
+    fun deleteSport(sport: SportEntity) {
+        viewModelScope.launch {
+            repository.deleteSport(sport)
+        }
+    }
+
+    // Dashboard 用 - 随机数据
+    fun generateRandomStep(): Int = (2000..8000).random()
+    fun generateRandomHeartRate(): Int = (60..120).random()
 
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {

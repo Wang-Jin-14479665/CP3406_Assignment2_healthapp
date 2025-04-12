@@ -4,16 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.*
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.*
 import androidx.compose.ui.Modifier
-import com.example.healthapp.data.AppDatabase
-import com.example.healthapp.data.RoomHealthRepository
-import com.example.healthapp.ui.screens.meal.MealScreen
-import com.example.healthapp.ui.screens.sport.SportScreen
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
+import com.example.healthapp.ui.screens.BottomNavigationBar
+import com.example.healthapp.ui.theme.HealthAppTheme
 import com.example.healthapp.viewmodel.HealthViewModel
 import com.example.healthapp.viewmodel.HealthViewModelFactory
 
@@ -21,51 +18,26 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val database = AppDatabase.getDatabase(this)
-        val repository = RoomHealthRepository(
-            database.healthDao(),
-            database.sportDao()
-        )
-
         setContent {
-            val viewModel: HealthViewModel = viewModel(
-                factory = HealthViewModelFactory(repository)
-            )
+            HealthAppTheme {
+                val navController = rememberNavController()
 
-            val navController = rememberNavController()
+                // 使用 ViewModelFactory 正确注入 repository
+                val viewModel: HealthViewModel = viewModel(
+                    factory = HealthViewModelFactory(
+                        (application as HealthApplication).repository
+                    )
+                )
 
-            Scaffold(
-                bottomBar = {
-                    BottomNavigationBar(navController)
-                }
-            ) { innerPadding ->
-                NavHost(
-                    navController = navController,
-                    startDestination = "meal",
-                    modifier = Modifier.padding(innerPadding)
-                ) {
-                    composable("meal") { MealScreen(viewModel) }
-                    composable("sport") { SportScreen(viewModel) }
+                Scaffold(
+                    bottomBar = {
+                        BottomNavigationBar(navController)
+                    }
+                ) { innerPadding ->
+                    NavGraph(navController, viewModel, Modifier.padding(innerPadding))
                 }
             }
         }
     }
 }
 
-@Composable
-fun BottomNavigationBar(navController: NavHostController) {
-    NavigationBar {
-        NavigationBarItem(
-            selected = navController.currentDestination?.route == "meal",
-            onClick = { navController.navigate("meal") },
-            label = { Text("Meal") },
-            icon = {}
-        )
-        NavigationBarItem(
-            selected = navController.currentDestination?.route == "sport",
-            onClick = { navController.navigate("sport") },
-            label = { Text("Sport") },
-            icon = {}
-        )
-    }
-}

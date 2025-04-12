@@ -39,8 +39,8 @@ fun SportScreen(viewModel: HealthViewModel) {
                 ) {
                     Column(modifier = Modifier.padding(12.dp)) {
                         Text("sport event：${sport.sportName}", style = MaterialTheme.typography.titleMedium)
-                        Text("average heart rate\n：${sport.avgHeartRate} beats/minute")
-                        Text("heat consumption\n：${sport.caloriesBurned} kilocalorie")
+                        Text("average heart rate：${sport.avgHeartRate} beats/m")
+                        Text("heat consumption：${sport.caloriesBurned} kilocalorie")
 
                         Spacer(modifier = Modifier.height(4.dp))
 

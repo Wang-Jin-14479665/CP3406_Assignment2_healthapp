@@ -59,7 +59,7 @@ fun MealScreen(viewModel: HealthViewModel) {
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
-                                Text("- ${it.foodName}: ${it.calories} kilocalorie")
+                                Text("- ${it.foodName}: \n ${it.calories} kilocalorie")
                                 Button(onClick = { viewModel.deleteFood(it) }) {
                                     Text("delete")
                                 }
