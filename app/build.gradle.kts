@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("kotlin-kapt")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -43,6 +44,7 @@ dependencies {
     implementation(libs.androidx.monitor)
     implementation(libs.androidx.junit.ktx)
     implementation(libs.androidx.ui.test.junit4.android)
+    implementation(libs.play.services.basement)
     testImplementation(libs.junit.junit)
     androidTestImplementation(libs.junit.junit)
     debugImplementation("androidx.compose.ui:ui-tooling:1.6.5")
@@ -65,4 +67,14 @@ dependencies {
 
     implementation("androidx.compose.material:material-icons-extended")
 
+    // Retrofit 核心库
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    // Gson 转换器（将 Json 转 Kotlin 对象）
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    // OkHttp 日志拦截（可选，用于调试）
+    implementation("com.squareup.okhttp3:logging-interceptor:4.9.3")
+
+    // Hilt DI
+    implementation ("com.google.dagger:hilt-android:2.48")
+    kapt ("com.google.dagger:hilt-compiler:2.48")
 }
